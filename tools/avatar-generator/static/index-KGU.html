@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Palantir-Style KGU Operations Command Center</title>
+  <link rel="stylesheet" href="style-KGU.css">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Palantir-Style Operations HUD Dashboard -->
+  <div class="hud-dashboard">
+    
+    <!-- Top System Telemetry Bar -->
+    <header class="hud-header">
+      <div class="hud-header-left">
+        <div class="hud-logo">KGU OPERATIONS COMMAND</div>
+        <div class="sec-status">
+          <span class="status-dot green"></span>
+          <span class="status-text">SECURE TUNNEL (ACTIVE)</span>
+        </div>
+      </div>
+      
+      <div class="hud-header-center">
+        <div class="telemetry-item">
+          <span class="tele-label">VPN IP:</span>
+          <span class="tele-val text-cyan">100.64.12.89</span>
+        </div>
+        <div class="telemetry-item">
+          <span class="tele-label">GPU COMPUTE:</span>
+          <span class="tele-val text-green">VRAM 7.4GB / 32GB</span>
+        </div>
+        <div class="telemetry-item">
+          <span class="tele-label">CRM NODE:</span>
+          <span class="tele-val text-purple">PORT 13003 (SYNCED)</span>
+        </div>
+      </div>
+      
+      <div class="hud-header-right">
+        <div class="system-time" id="meeting-timer">00:00:00</div>
+        <div class="view-controls">
+          <a href="/static/studio.html" target="_blank" class="view-btn" style="background: rgba(0, 242, 254, 0.2); border-color: rgba(0, 242, 254, 0.4); text-decoration: none; display: inline-flex; align-items: center; justify-content: center; margin-right: 0.5rem; color: var(--accent-secondary); font-weight: 600;">🎬 VIDEO STUDIO</a>
+          <a href="/static/admin.html" target="_blank" class="view-btn" style="background: rgba(138, 43, 226, 0.25); border-color: rgba(138, 43, 226, 0.5); text-decoration: none; display: inline-flex; align-items: center; justify-content: center; margin-right: 0.5rem; color: #b388ff; font-weight: 600;">👤 MANAGE TWINS</a>
+          <button id="btn-solo" class="view-btn active" onclick="setMode('solo')">👤 SPEAKER</button>
+          <button id="btn-boardroom" class="view-btn" onclick="setMode('boardroom')">📱 GALLERY</button>
+          <button id="btn-ops-console" class="view-btn" onclick="setMode('ops-console')" style="background: rgba(5, 255, 128, 0.12); border-color: rgba(5, 255, 128, 0.3); color: var(--accent-green); font-weight:600;">⚙️ OPS CONSOLE</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Workspace Grid Layout (Palantir Layout) -->
+    <div class="hud-workspace">
+      
+      <!-- Left Panel: Operations & Lead Generator Control -->
+      <aside class="hud-panel left-panel">
+        <div class="panel-section">
+          <h3>⚡ SOVEREIGN LEAD GENERATOR</h3>
+          <div class="scraper-control">
+            <input type="text" id="scraper-url-input" placeholder="Enter target directory URL..." value="https://www.courtlistener.com/contact/">
+            <button class="panel-btn glow-btn-cyan" onclick="runSovereignScraper()">RUN SCRAPER</button>
+          </div>
+          <div class="scraper-status-log" id="scraper-log">
+            [Scraper IDLE. Waiting for input...]
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h3>📋 DISCOVERED LEAD LEDGER</h3>
+          <div class="scraped-leads-container">
+            <ul class="leads-list" id="scraped-leads-list">
+              <li class="lead-item synced">
+                <span class="lead-email">partner@courtlistener.com</span>
+                <span class="lead-status-badge">Odoo Synced</span>
+              </li>
+              <li class="lead-item synced">
+                <span class="lead-email">grants@fal.ai</span>
+                <span class="lead-status-badge">Odoo Synced</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h3>👥 SYNTHETIC SWARM MEMBERS</h3>
+          <ul class="swarm-participants">
+            <li class="participant-item active-selector" data-role="ceo">
+              <span class="role-badge">CEO</span>
+              <span class="name">Joann Coffey</span>
+              <span class="status text-green">[SIMULATING]</span>
+            </li>
+            <li class="participant-item" data-role="cto">
+              <span class="role-badge">CTO</span>
+              <span class="name">Joann Coffey</span>
+              <span class="status text-cyan">[STANDBY]</span>
+            </li>
+            <li class="participant-item" data-role="cmo">
+              <span class="role-badge">CMO</span>
+              <span class="name">Joann Coffey</span>
+              <span class="status text-cyan">[STANDBY]</span>
+            </li>
+            <li class="participant-item" data-role="clo">
+              <span class="role-badge">CLO</span>
+              <span class="name">Joann Coffey</span>
+              <span class="status text-cyan">[STANDBY]</span>
+            </li>
+            <li class="participant-item" data-role="cfo">
+              <span class="role-badge">CFO</span>
+              <span class="name">Joann Coffey</span>
+              <span class="status text-cyan">[STANDBY]</span>
+            </li>
+            <li class="participant-item" data-role="cgo">
+              <span class="role-badge">CGO</span>
+              <span class="name">Joann Coffey</span>
+              <span class="status text-cyan">[STANDBY]</span>
+            </li>
+          </ul>
+        </div>
+      </aside>
+
+      <!-- Center: Video Viewport & Terminal Log -->
+      <main class="hud-main-viewport" style="position: relative;">
+        <!-- OPS CONSOLE IFRAME VIEW -->
+        <iframe id="ops-console-iframe" src="http://localhost:8030" style="display: none; border: none; width: 100%; height: 100%; border-radius: 12px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45);"></iframe>
+        
+        <!-- SPEAKER VIEW -->
+        <div id="solo-avatar-view" class="viewport-frame">
+          <div class="avatar-display-box">
+            <div class="cyber-crosshairs"></div>
+            <img id="avatar-image" src="images/ceo.png" alt="Active Speaker">
+            <video id="avatar-video" playsinline style="display: none;"></video>
+            
+            <div class="waveform-container" id="waveform">
+              <span class="bar"></span>
+              <span class="bar"></span>
+              <span class="bar"></span>
+              <span class="bar"></span>
+              <span class="bar"></span>
+              <span class="bar"></span>
+              <span class="bar"></span>
+            </div>
+            
+            <button id="btn-tavus-call" class="tavus-trigger-btn" onclick="startTavusCall()">⚡ INITIATE WEBRTC TWIN CALL</button>
+          </div>
+          
+          <div class="active-member-info">
+            <h2 id="twin-name">Joann Coffey (CEO Twin)</h2>
+            <p id="twin-bio">Representing Joann's Present Day Wise Elder self.</p>
+          </div>
+        </div>
+
+        <!-- GALLERY VIEW (GRID) -->
+        <div id="boardroom-view" class="viewport-grid" style="display: none;">
+          <!-- Grid Boxes for each member -->
+          <div class="grid-box active" data-boardroom-role="ceo">
+            <div class="grid-box-inner">
+              <img id="boardroom-img-ceo" src="images/ceo.png" alt="CEO">
+              <div class="grid-label">CEO - Joann Coffey</div>
+            </div>
+          </div>
+          <div class="grid-box" data-boardroom-role="cto">
+            <div class="grid-box-inner">
+              <img id="boardroom-img-cto" src="images/ceo.png" alt="CTO">
+              <div class="grid-label">CTO - Joann Coffey</div>
+            </div>
+          </div>
+          <div class="grid-box" data-boardroom-role="cmo">
+            <div class="grid-box-inner">
+              <img id="boardroom-img-cmo" src="images/ceo.png" alt="CMO">
+              <div class="grid-label">CMO - Joann Coffey</div>
+            </div>
+          </div>
+          <div class="grid-box" data-boardroom-role="clo">
+            <div class="grid-box-inner">
+              <img id="boardroom-img-clo" src="images/ceo.png" alt="CLO">
+              <div class="grid-label">CLO - Joann Coffey</div>
+            </div>
+          </div>
+          <div class="grid-box" data-boardroom-role="cfo">
+            <div class="grid-box-inner">
+              <img id="boardroom-img-cfo" src="images/ceo.png" alt="CFO">
+              <div class="grid-label">CFO - Joann Coffey</div>
+            </div>
+          </div>
+          <div class="grid-box" data-boardroom-role="cgo">
+            <div class="grid-box-inner">
+              <img id="boardroom-img-cgo" src="images/ceo.png" alt="CGO">
+              <div class="grid-label">CGO - Joann Coffey</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scrollable Operations Terminal Log -->
+        <footer class="viewport-terminal">
+          <div class="terminal-header">SYSTEM OPERATIONS REAL-TIME TELEMETRY LOG</div>
+          <div class="terminal-body" id="terminal-body-log">
+            [03:51:22] [CLO] Initialized legal opinion search engine connection.<br>
+            [03:51:22] [CGO] Sovereign Scraper loaded for targeted contact extraction.<br>
+            [03:51:23] [CTO] Headscale VPN node 100.64.12.89 authenticated securely.<br>
+            [03:51:25] [CEO] Synthetic company swarm standing by for directives.
+          </div>
+        </footer>
+      </main>
+
+      <!-- Right Panel: Strategic Chat & Advisor Controls -->
+      <aside class="hud-panel right-panel">
+        <div class="panel-section chat-section">
+          <h3>💬 IN-MEETING DIALOGUE CHANNEL</h3>
+          <div class="chat-history" id="chat-history">
+            <div class="message assistant">
+              <div class="sender">Joann Coffey (CEO Twin)</div>
+              <div class="text">Greetings. I am Joann's Digital Twin. Let us align on our long-term capital strategy or review our secure network mesh deployments. What is your directive?</div>
+            </div>
+          </div>
+          
+          <div class="chat-input-container">
+            <div class="advisor-toggle-box">
+              <input type="checkbox" id="advisor-mode-checkbox">
+              <label for="advisor-mode-checkbox">💡 ADVISOR SWARM MODE (CLAUDE OPUS/SONNET)</label>
+            </div>
+            <div class="chat-input-wrapper">
+              <input type="text" id="chat-input" placeholder="Enter directive..." autocomplete="off">
+              <button id="send-btn" class="chat-send-btn">SEND</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-section">
+          <h3>⚡ PRE-BUILT DIRECTIVES</h3>
+          <div class="directives-grid">
+            <button class="dir-btn" onclick="injectPrompt('Analyze water quality PFAS legal liabilities')">⚖️ Legal Audit</button>
+            <button class="dir-btn" onclick="injectPrompt('Draft Care-a-thon media outreach plan')">📢 Media outreach</button>
+            <button class="dir-btn" onclick="injectPrompt('Verify Odoo opportunity synchronization status')">🔌 Sync Verify</button>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- WebRTC Tavus Call Modal Overlay -->
+    <div id="tavus-modal" class="tavus-modal" style="display: none;">
+      <div class="tavus-modal-content">
+        <div class="tavus-modal-header">
+          <span>🔒 ENCRYPTED WEBRTC CONVERSATIONAL SESSION</span>
+          <button class="tavus-close-btn" onclick="closeTavusCall()">✕ CLOSE</button>
+        </div>
+        <div id="tavus-status" style="padding: 10px; color: #06b6d4; font-size: 12px; background: rgba(0,0,0,0.5);">Connecting to Tavus Conversational API...</div>
+        <iframe id="tavus-iframe" src="" allow="microphone; camera; display-capture; autoplay"></iframe>
+      </div>
+    </div>
+
+  </div>
+
+  <audio id="audio-player" style="display: none;"></audio>
+  <script src="app-KGU.js"></script>
+</body>
+</html>

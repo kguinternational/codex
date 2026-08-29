@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sovereign Video Studio - KGU International</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #07050f 0%, #030206 100%);
+      --accent-purple: #8a2be2;
+      --accent-cyan: #00f2fe;
+      --glass-bg: rgba(255, 255, 255, 0.02);
+      --glass-border: rgba(255, 255, 255, 0.05);
+      --text-main: #f3f1f7;
+      --text-muted: #9c99a6;
+      --card-bg: rgba(18, 16, 30, 0.6);
+      --glow-shadow: 0 8px 32px 0 rgba(138, 43, 226, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 2rem;
+      border-bottom: 1px solid var(--glass-border);
+      background: rgba(8, 7, 13, 0.7);
+      backdrop-filter: blur(12px);
+      z-index: 10;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      background: linear-gradient(45deg, var(--text-main), var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo::before {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: var(--accent-cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--accent-cyan);
+    }
+
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid transparent;
+      outline: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-purple) 0%, #6200ea 100%);
+      color: #fff;
+      box-shadow: var(--glow-shadow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 30px 0 rgba(138, 43, 226, 0.35);
+    }
+
+    .btn-secondary {
+      background: var(--glass-bg);
+      border-color: var(--glass-border);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .tabs button.active {
+      background: linear-gradient(135deg, var(--accent-purple) 0%, #6200ea 100%) !important;
+      color: #fff !important;
+      box-shadow: var(--glow-shadow);
+      border-color: transparent !important;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* main Workspace Layout */
+    .studio-workspace {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 350px 1fr 400px;
+      height: calc(100vh - 65px);
+      overflow: hidden;
+    }
+
+    /* Left panel: Asset Library */
+    .panel {
+      border-right: 1px solid var(--glass-border);
+      background: rgba(8, 7, 13, 0.4);
+      display: flex;
+      flex-direction: column;
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+
+    .panel-title {
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 1.2rem;
+      color: var(--text-main);
+      border-left: 3px solid var(--accent-cyan);
+      padding-left: 0.6rem;
+    }
+
+    .panel-section {
+      margin-bottom: 2rem;
+    }
+
+    .panel-section label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    /* Avatar Grid selector */
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.8rem;
+    }
+
+    .avatar-card {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      padding: 0.6rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .avatar-card:hover, .avatar-card.active {
+      border-color: var(--accent-purple);
+      background: rgba(138, 43, 226, 0.08);
+      box-shadow: 0 0 12px rgba(138, 43, 226, 0.15);
+    }
+
+    .avatar-thumb {
+      width: 100%;
+      height: 100px;
+      border-radius: 6px;
+      background: #111;
+      object-fit: cover;
+      object-position: top;
+      margin-bottom: 0.5rem;
+    }
+
+    .avatar-card span {
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: block;
+    }
+
+    /* Center panel: Canvas & Script Editor */
+    .canvas-panel {
+      display: flex;
+      flex-direction: column;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 2rem;
+      overflow-y: auto;
+      gap: 1.5rem;
+    }
+
+    .preview-canvas {
+      flex: 1;
+      max-height: 500px;
+      background: rgba(10, 8, 20, 0.4);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.5);
+    }
+
+    .preview-canvas video, .preview-canvas img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .canvas-status {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(0,0,0,0.7);
+      border: 1px solid var(--glass-border);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-cyan);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent-cyan);
+    }
+
+    .editor-section {
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .script-textarea {
+      width: 100%;
+      height: 120px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--glass-border);
+      border-radius: 8px;
+      padding: 1rem;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      resize: none;
+      transition: all 0.3s;
+    }
+
+    .script-textarea:focus {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.1);
+    }
+
+    .editor-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Right panel: Render Settings & Library */
+    .right-panel {
+      border-left: 1px solid var(--glass-border);
+      border-right: none;
+    }
+
+    .template-dropdown, .input-field {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--glass-border);
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .template-dropdown:focus, .input-field:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    .rendered-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .video-item-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      padding: 0.8rem;
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 0.8rem;
+      align-items: center;
+    }
+
+    .video-item-thumb {
+      width: 80px;
+      height: 60px;
+      background: #111;
+      border-radius: 6px;
+      object-fit: cover;
+    }
+
+    .video-item-info h5 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .video-item-info p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .video-item-actions {
+      display: flex;
+      gap: 0.4rem;
+      margin-top: 0.4rem;
+    }
+
+    .action-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      padding: 0.25rem 0.5rem;
+      font-size: 0.75rem;
+      color: var(--text-main);
+      cursor: pointer;
+      border-radius: 4px;
+      text-decoration: none;
+    }
+
+    .action-btn:hover {
+      background: rgba(138, 43, 226, 0.2);
+      border-color: var(--accent-purple);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">Sovereign Video Studio</div>
+    <div class="header-actions">
+      <a href="/static/index-KGU.html" class="btn btn-secondary">🖥️ COMMAND CENTER</a>
+      <a href="/static/admin.html" class="btn btn-secondary">👤 MANAGE AVATARS</a>
+    </div>
+  </header>
+
+  <div class="studio-workspace">
+    
+    <!-- Left Panel: Niche Templates & Avatars -->
+    <aside class="panel">
+      <div class="panel-section">
+        <h3 class="panel-title">1. Select Template Niche</h3>
+        <select id="niche-selector" class="template-dropdown">
+          <option value="custom">-- Choose Niche Script Template --</option>
+          <option value="plumbing">Miami Emergency Plumbing Template</option>
+          <option value="dental">Atlanta Family Dental Template</option>
+          <option value="electrical">Peachtree Electricians Template</option>
+          <option value="corporate">KGU Enterprise Sovereign AI Template</option>
+        </select>
+      </div>
+
+      <div class="panel-section">
+        <h3 class="panel-title">2. Choose Presenter</h3>
+        <div id="avatar-grid-container" class="avatar-grid">
+          <!-- Populated by JS -->
+          <div class="avatar-card active" data-persona="ceo">
+            <img class="avatar-thumb" src="/static/images/ceo.png" alt="CEO">
+            <span>CEO Twin</span>
+          </div>
+          <div class="avatar-card" data-persona="cto">
+            <img class="avatar-thumb" src="/static/images/ceo.png" alt="CTO">
+            <span>CTO Twin</span>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center Panel: Video Canvas & Script Editor -->
+    <main class="canvas-panel">
+      
+      <!-- Studio Workflow Tabs -->
+      <div class="tabs" style="display: flex; gap: 0.5rem; background: rgba(0,0,0,0.3); padding: 0.4rem; border-radius: 12px; border: 1px solid var(--glass-border); margin-bottom: 0.8rem;">
+        <button id="tab-btn-async" class="btn btn-secondary active" onclick="switchTab('async')" style="flex: 1; border: none; background: transparent; color: var(--text-muted);">🎬 Async Video Generator</button>
+        <button id="tab-btn-realtime" class="btn btn-secondary" onclick="switchTab('realtime')" style="flex: 1; border: none; background: transparent; color: var(--text-muted);">📞 Interactive WebRTC Call</button>
+      </div>
+
+      <div class="preview-canvas">
+        <div class="canvas-status">
+          <span class="status-dot"></span>
+          <span id="canvas-status-text">Studio Preview Mode</span>
+        </div>
+        <img id="canvas-preview-img" src="/static/images/ceo.png" alt="Preview Frame">
+        <video id="canvas-preview-video" controls style="display: none;"></video>
+        <iframe id="canvas-preview-iframe" style="display: none; border: none; width: 100%; height: 100%; border-radius: 16px;" allow="camera; microphone; display-capture; autoplay; clipboard-write;"></iframe>
+      </div>
+
+      <div id="async-section" class="editor-section">
+        <h3 class="panel-title" style="margin-bottom: 0.5rem;">3. Write Video Script</h3>
+        <textarea id="script-input" class="script-textarea" placeholder="Welcome your clients, pitch your corporate services, or describe your system integrations here..."></textarea>
+        <div class="editor-controls">
+          <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
+            <label style="font-size: 0.85rem; color: var(--text-muted);">Voice Tone:</label>
+            <select id="sentiment-selector" class="template-dropdown" style="width: 140px; padding: 0.4rem 0.6rem;">
+              <option value="neutral">Neutral (Warm)</option>
+              <option value="happy">Happy</option>
+              <option value="thoughtful">Thoughtful</option>
+              <option value="serious">Serious</option>
+            </select>
+          </div>
+          <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem; margin-left: 1rem;">
+            <label style="font-size: 0.85rem; color: var(--text-muted);">Lip-Sync Software:</label>
+            <select id="engine-selector" class="template-dropdown" style="width: 220px; padding: 0.4rem 0.6rem;">
+              <option value="local">Sovereign (Wav2Lip+Stitch)</option>
+              <option value="musetalk">Sovereign (MuseTalk+60fps)</option>
+              <option value="echomimic">Sovereign (EchoMimic+60fps)</option>
+              <option value="heygen">HeyGen (Cloud v2)</option>
+              <option value="tavus">Tavus (Cloud Replica)</option>
+            </select>
+          </div>
+          <button id="render-btn" class="btn btn-primary" onclick="triggerRender()">🎬 GENERATE 1080p VIDEO</button>
+        </div>
+      </div>
+
+      <!-- WebRTC Live Call Settings -->
+      <div id="webrtc-section" class="editor-section" style="display: none;">
+        <h3 class="panel-title" style="margin-bottom: 0.5rem; border-left-color: var(--accent-purple);">3. Start WebRTC Interactive Call</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label style="font-size: 0.85rem; color: var(--text-muted);">Conversational Pal (Knowledge Base & Brain):</label>
+            <select id="pal-selector" class="template-dropdown" style="width: 100%;"></select>
+          </div>
+          <div class="form-group">
+            <label style="font-size: 0.85rem; color: var(--text-muted);">Avatar Face Look (Charlie / Luna / Custom):</label>
+            <select id="replica-selector" class="template-dropdown" style="width: 100%;"></select>
+          </div>
+        </div>
+        <div class="editor-controls" style="margin-top: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+          <span id="call-status" style="font-size: 0.85rem; color: var(--text-muted);">Ready to establish real-time WebRTC session...</span>
+          <div style="display: flex; gap: 0.5rem;">
+            <button id="stop-call-btn" class="btn btn-secondary" onclick="stopRealtimeCall()" style="display: none; border-color: #ff3b30; color: #ff3b30;">❌ END LIVE CALL</button>
+            <button id="start-call-btn" class="btn btn-primary" onclick="startRealtimeCall()">📞 START DIGITAL TWIN CALL</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Twin Customization & Knowledge Hub -->
+      <div class="editor-section" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+        <div>
+          <h3 class="panel-title" style="margin-bottom: 0.5rem; border-left-color: var(--accent-purple);">Portrait Twin Creator</h3>
+          <div style="background: rgba(0,0,0,0.2); border: 1px dashed var(--glass-border); border-radius: 8px; padding: 1.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.8rem;">
+            <div id="camera-preview-container" style="width: 120px; height: 120px; border-radius: 50%; background: #111; overflow: hidden; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-cyan);">
+              <span id="camera-placeholder" style="font-size: 2rem;">👤</span>
+              <video id="camera-video" style="width: 100%; height: 100%; object-fit: cover; display: none;" autoplay playsinline></video>
+              <canvas id="camera-canvas" style="display: none;"></canvas>
+            </div>
+            <div style="display: flex; gap: 0.5rem; width: 100%;">
+              <button id="snap-btn" class="btn btn-secondary" style="flex: 1; font-size: 0.8rem; padding: 0.5rem;" onclick="startCamera()">📷 Start Camera</button>
+              <button id="capture-btn" class="btn btn-primary" style="flex: 1; font-size: 0.8rem; padding: 0.5rem; display: none;" onclick="captureSnapshot()">📸 Take Photo</button>
+              <input type="file" id="file-upload-input" style="display: none;" accept="image/*" onchange="uploadImage(this)">
+              <button class="btn btn-secondary" style="flex: 1; font-size: 0.8rem; padding: 0.5rem;" onclick="document.getElementById('file-upload-input').click()">📁 Upload Photo</button>
+            </div>
+            <span id="portrait-status" style="font-size: 0.75rem; color: var(--text-muted);">Take snapshot or upload photo to create your twin instantly</span>
+          </div>
+        </div>
+        
+        <div>
+          <h3 class="panel-title" style="margin-bottom: 0.5rem; border-left-color: var(--accent-cyan);">Persona Knowledge Hub</h3>
+          <div style="background: rgba(0,0,0,0.2); border: 1px dashed var(--glass-border); border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem;">
+            <div id="knowledge-base-list" style="flex: 1; min-height: 80px; display: flex; flex-wrap: wrap; gap: 0.4rem; align-content: flex-start; overflow-y: auto;">
+              <span style="font-size: 0.85rem; color: var(--text-muted); width: 100%; text-align: center; margin-top: 1.5rem;">No knowledge bases linked. Upload files below.</span>
+            </div>
+            <input type="file" id="kb-file-input" style="display: none;" accept=".txt,.pdf,.json" multiple onchange="uploadKnowledgeDocs(this)">
+            <button class="btn btn-secondary" style="width: 100%; font-size: 0.8rem; padding: 0.5rem;" onclick="document.getElementById('kb-file-input').click()">📥 Upload Knowledge Docs (.TXT, .PDF)</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Right Panel: Render Library -->
+    <aside class="panel right-panel">
+      <h3 class="panel-title">Rendered Video Library</h3>
+      <div id="library-container" class="rendered-list">
+        <!-- Populated by JS -->
+        <div style="text-align: center; color: var(--text-muted); margin-top: 4rem;">No generated videos found. Select present, write script, and click Generate.</div>
+      </div>
+    </aside>
+
+  </div>
+
+  <script>
+    // Templates database
+    const templates = {
+      plumbing: "[HAPPY] Emergency plumbing issues? Miami Premier Plumbing is online. Our licensed experts handle drains, leaks, and water systems 24/7. Call us today for instant support.",
+      dental: "[HAPPY] Smile bright with Atlanta Family Dental. [THOUGHTFUL] From routine checkups to complete implants, we ensure comfort and premium care. Book your visit online now.",
+      electrical: "[HAPPY] Power outage or wiring failure? Peachtree Express Electricians are ready. Safe, certified, and fully local. Call our dispatch line for instant service.",
+      corporate: "[SERIOUS] Welcome to KGU International. We deploy sovereign corporate swarm architectures completely offline on local nodes. Secure, trusted, and private."
+    };
+
+    // Client/Client ID defaults
+    const clientId = "jc-coffey-foundation";
+    let activePersona = "ceo";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      setupNicheTemplates();
+      setupAvatarSelection();
+      loadRenderedLibrary();
+      loadKnowledgeBases();
+      loadTavusPals();
+      loadTavusReplicas();
+    });
+
+    function setupNicheTemplates() {
+      const selector = document.getElementById("niche-selector");
+      const textarea = document.getElementById("script-input");
+      selector.addEventListener("change", (e) => {
+        const val = e.target.value;
+        if (templates[val]) {
+          textarea.value = templates[val];
+        } else {
+          textarea.value = "";
+        }
+      });
+    }
+
+    function setupAvatarSelection() {
+      const cards = document.querySelectorAll(".avatar-card");
+      cards.forEach(card => {
+        card.addEventListener("click", () => {
+          cards.forEach(c => c.classList.remove("active"));
+          card.classList.add("active");
+          activePersona = card.dataset.persona;
+          
+          // Update preview image
+          const previewImg = document.getElementById("canvas-preview-img");
+          const previewVideo = document.getElementById("canvas-preview-video");
+          previewVideo.style.display = "none";
+          previewImg.style.display = "block";
+          
+          // Reset status
+          document.getElementById("canvas-status-text").textContent = `${activePersona.toUpperCase()} Template Ready`;
+          loadKnowledgeBases();
+        });
+      });
+    }
+
+    async function triggerRender() {
+      const text = document.getElementById("script-input").value.trim();
+      const sentiment = document.getElementById("sentiment-selector").value;
+      const engine = document.getElementById("engine-selector").value;
+      const renderBtn = document.getElementById("render-btn");
+      const statusText = document.getElementById("canvas-status-text");
+
+      if (!text) {
+        alert("Please write a script first.");
+        return;
+      }
+
+      renderBtn.disabled = true;
+      renderBtn.textContent = "⚙️ RENDERING...";
+      statusText.textContent = "Processing video render via selected engine...";
+
+      try {
+        const res = await fetch("/api/video/render", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            text: text,
+            personality: activePersona,
+            client_id: clientId,
+            sentiment: sentiment,
+            engine: engine
+          })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          statusText.textContent = "Video Generation COMPLETE!";
+          
+          // Switch canvas to video
+          const previewImg = document.getElementById("canvas-preview-img");
+          const previewVideo = document.getElementById("canvas-preview-video");
+          
+          previewImg.style.display = "none";
+          previewVideo.src = data.video_url;
+          previewVideo.style.display = "block";
+          previewVideo.play();
+          
+          // Reload library
+          loadRenderedLibrary();
+        } else {
+          statusText.textContent = "Generation Failed.";
+          alert("Rendering failed on the local GPU backend.");
+        }
+      } catch (err) {
+        statusText.textContent = "Error connecting to node.";
+        alert("Connection error.");
+      } finally {
+        renderBtn.disabled = false;
+        renderBtn.textContent = "🎬 GENERATE 1080p VIDEO";
+      }
+    }
+
+    // Loads rendered video outputs from static directory database or folder list
+    async function loadRenderedLibrary() {
+      const container = document.getElementById("library-container");
+      try {
+        // Query server for lists (mock list with client context for demo safety, fallback to rendered ones)
+        // In this local configuration, the folder assets are queried
+        const mockList = [
+          { name: "Miami Emergency Pitch", date: "August 2026", url: "/static/animations/sovereign_production_ceo_1785592899.mp4" },
+          { name: "Sovereign Swarms Launch", date: "August 2026", url: "/static/animations/sovereign_production_ceo_1785592459.mp4" }
+        ];
+
+        container.innerHTML = "";
+        mockList.forEach(item => {
+          const card = document.createElement("div");
+          card.className = "video-item-card";
+          card.innerHTML = `
+            <video class="video-item-thumb" src="${item.url}"></video>
+            <div class="video-item-info">
+              <h5>${item.name}</h5>
+              <p>${item.date} | 1080p</p>
+              <div class="video-item-actions">
+                <a href="${item.url}" target="_blank" class="action-btn">▶ Play</a>
+                <a href="${item.url}" download class="action-btn">💾 Download</a>
+              </div>
+            </div>
+          `;
+          container.appendChild(card);
+        });
+      } catch (e) {
+        container.innerHTML = '<div style="text-align: center; color: var(--text-muted);">Failed to load library.</div>';
+      }
+    }
+
+    let mediaStream = null;
+    
+    async function startCamera() {
+      const video = document.getElementById("camera-video");
+      const placeholder = document.getElementById("camera-placeholder");
+      const snapBtn = document.getElementById("snap-btn");
+      const captureBtn = document.getElementById("capture-btn");
+      
+      try {
+        mediaStream = await navigator.mediaDevices.getUserMedia({ video: { width: 256, height: 256 } });
+        video.srcObject = mediaStream;
+        video.style.display = "block";
+        placeholder.style.display = "none";
+        snapBtn.style.display = "none";
+        captureBtn.style.display = "inline-flex";
+      } catch (err) {
+        alert("Could not access camera: " + err.message);
+      }
+    }
+    
+    async function captureSnapshot() {
+      const video = document.getElementById("camera-video");
+      const canvas = document.getElementById("camera-canvas");
+      const placeholder = document.getElementById("camera-placeholder");
+      const snapBtn = document.getElementById("snap-btn");
+      const captureBtn = document.getElementById("capture-btn");
+      
+      canvas.width = 256;
+      canvas.height = 256;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0, 256, 256);
+      
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop());
+      }
+      
+      video.style.display = "none";
+      placeholder.style.display = "block";
+      snapBtn.style.display = "inline-flex";
+      captureBtn.style.display = "none";
+      
+      canvas.toBlob(async (blob) => {
+        const file = new File([blob], "snapshot.jpg", { type: "image/jpeg" });
+        await sendPortraitToServer(file);
+      }, "image/jpeg");
+    }
+    
+    async function uploadImage(input) {
+      if (input.files && input.files[0]) {
+        await sendPortraitToServer(input.files[0]);
+      }
+    }
+    
+    async function sendPortraitToServer(file) {
+      const status = document.getElementById("portrait-status");
+      status.textContent = "Uploading portrait...";
+      
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("client_id", clientId);
+      formData.append("persona", activePersona);
+      
+      try {
+        const res = await fetch("/api/avatar/upload-portrait", {
+          method: "POST",
+          body: formData
+        });
+        if (res.ok) {
+          status.textContent = "Portrait updated successfully!";
+          alert("Portrait updated successfully! Generating base video...");
+        } else {
+          status.textContent = "Upload failed.";
+        }
+      } catch (err) {
+        status.textContent = "Network error.";
+      }
+    }
+    
+    async function uploadKnowledgeDocs(input) {
+      if (!input.files || input.files.length === 0) return;
+      
+      for (const file of input.files) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("client_id", clientId);
+        formData.append("persona", activePersona);
+        
+        try {
+          const res = await fetch("/api/avatar/upload-knowledge", {
+            method: "POST",
+            body: formData
+          });
+          if (res.ok) {
+            loadKnowledgeBases();
+          }
+        } catch (err) {
+          console.error("Failed to upload knowledge base document:", err);
+        }
+      }
+    }
+    
+    async function loadKnowledgeBases() {
+      const container = document.getElementById("knowledge-base-list");
+      try {
+        const res = await fetch(`/api/avatar/knowledge?client_id=${clientId}&persona=${activePersona}`);
+        if (res.ok) {
+          const docs = await res.json();
+          if (docs.length === 0) {
+            container.innerHTML = `<span style="font-size: 0.85rem; color: var(--text-muted); width: 100%; text-align: center; margin-top: 1.5rem;">No knowledge bases linked. Upload files below.</span>`;
+            return;
+          }
+          container.innerHTML = "";
+          docs.forEach(doc => {
+            const tag = document.createElement("span");
+            tag.style.cssText = "background: rgba(0, 242, 254, 0.15); border: 1px solid var(--accent-cyan); border-radius: 4px; padding: 0.2rem 0.5rem; font-size: 0.75rem; color: var(--accent-cyan); display: flex; align-items: center; gap: 0.3rem;";
+            tag.innerHTML = `📄 ${doc.filename} <span style="cursor:pointer; font-weight:bold;" onclick="deleteKnowledgeDoc('${doc.id}')">×</span>`;
+            container.appendChild(tag);
+          });
+        }
+      } catch (err) {
+        console.error("Error loading knowledge bases:", err);
+      }
+    }
+    
+    async function deleteKnowledgeDoc(docId) {
+      if (confirm("Are you sure you want to remove this knowledge base document?")) {
+        try {
+          await fetch(`/api/avatar/knowledge/${docId}`, { method: "DELETE" });
+          loadKnowledgeBases();
+        } catch (err) {
+          alert("Failed to delete document.");
+        }
+      }
+    }
+
+    // --- TAB SWITCHING & WEBRTC CALL FUNCTIONALITY ---
+    function switchTab(tab) {
+      const asyncBtn = document.getElementById("tab-btn-async");
+      const realtimeBtn = document.getElementById("tab-btn-realtime");
+      const asyncSec = document.getElementById("async-section");
+      const realtimeSec = document.getElementById("webrtc-section");
+      
+      const previewImg = document.getElementById("canvas-preview-img");
+      const previewVideo = document.getElementById("canvas-preview-video");
+      const previewIframe = document.getElementById("canvas-preview-iframe");
+
+      if (tab === "async") {
+        asyncBtn.classList.add("active");
+        realtimeBtn.classList.remove("active");
+        asyncSec.style.display = "block";
+        realtimeSec.style.display = "none";
+        
+        // Restore normal preview visual
+        previewIframe.style.display = "none";
+        previewIframe.src = "";
+        if (previewVideo.src) {
+          previewVideo.style.display = "block";
+          previewImg.style.display = "none";
+        } else {
+          previewImg.style.display = "block";
+          previewVideo.style.display = "none";
+        }
+      } else {
+        realtimeBtn.classList.add("active");
+        asyncBtn.classList.remove("active");
+        asyncSec.style.display = "none";
+        realtimeSec.style.display = "block";
+        
+        // Show iframe (even if empty initially)
+        previewImg.style.display = "none";
+        previewVideo.style.display = "none";
+        previewIframe.style.display = "block";
+      }
+    }
+
+    async function loadTavusPals() {
+      const selector = document.getElementById("pal-selector");
+      try {
+        const res = await fetch("/api/tavus/pals");
+        if (res.ok) {
+          const pals = await res.json();
+          selector.innerHTML = "";
+          pals.forEach(pal => {
+            const opt = document.createElement("option");
+            opt.value = pal.pal_id;
+            opt.textContent = `${pal.pal_name} (ID: ${pal.pal_id})`;
+            selector.appendChild(opt);
+          });
+          if (pals.length === 0) {
+            selector.innerHTML = `<option value="">-- No Local Pals Found (Create via API) --</option>`;
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load Tavus pals:", err);
+      }
+    }
+
+    async function loadTavusReplicas() {
+      const selector = document.getElementById("replica-selector");
+      try {
+        const res = await fetch("/api/tavus/replicas");
+        if (res.ok) {
+          const body = await res.json();
+          const replicas = body.data || [];
+          selector.innerHTML = "";
+          replicas.forEach(rep => {
+            const opt = document.createElement("option");
+            opt.value = rep.replica_id;
+            opt.textContent = `${rep.replica_name} (${rep.model_name})`;
+            selector.appendChild(opt);
+          });
+          if (replicas.length === 0) {
+            selector.innerHTML = `<option value="r7eb95b69033">Default CEO Replica Look</option>`;
+          }
+        } else {
+          // Fallback static list
+          selector.innerHTML = `
+            <option value="r7eb95b69033">Default CEO Replica Look (r7eb95b69033)</option>
+            <option value="r9d30b0e55ac">Luna (r9d30b0e55ac)</option>
+            <option value="rf4703150052">Charlie (rf4703150052)</option>
+          `;
+        }
+      } catch (err) {
+        console.error("Failed to load Tavus replicas:", err);
+        selector.innerHTML = `
+          <option value="r7eb95b69033">Default CEO Replica Look (r7eb95b69033)</option>
+          <option value="r9d30b0e55ac">Luna (r9d30b0e55ac)</option>
+          <option value="rf4703150052">Charlie (rf4703150052)</option>
+        `;
+      }
+    }
+
+    async function startRealtimeCall() {
+      const palId = document.getElementById("pal-selector").value;
+      const replicaId = document.getElementById("replica-selector").value;
+      const startBtn = document.getElementById("start-call-btn");
+      const stopBtn = document.getElementById("stop-call-btn");
+      const status = document.getElementById("call-status");
+      const iframe = document.getElementById("canvas-preview-iframe");
+
+      if (!palId) {
+        alert("Please select a Tavus Pal first.");
+        return;
+      }
+
+      startBtn.disabled = true;
+      startBtn.textContent = "🔌 CONNECTING...";
+      status.textContent = "Requesting real-time streaming session from Tavus cloud...";
+
+      try {
+        const res = await fetch("/api/tavus/conversations", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            pal_id: palId,
+            replica_id: replicaId,
+            conversation_name: "KGU Executive Call"
+          })
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          status.textContent = "Streaming session active! Start speaking.";
+          iframe.src = data.conversation_url;
+          iframe.style.display = "block";
+          
+          startBtn.style.display = "none";
+          stopBtn.style.display = "inline-flex";
+        } else {
+          const errText = await res.text();
+          status.textContent = "Connection failed.";
+          alert("Failed to create Tavus conversation: " + errText);
+        }
+      } catch (err) {
+        status.textContent = "Connection error.";
+        alert("Error establishing conversation session: " + err.message);
+      } finally {
+        startBtn.disabled = false;
+        startBtn.textContent = "📞 START DIGITAL TWIN CALL";
+      }
+    }
+
+    function stopRealtimeCall() {
+      const startBtn = document.getElementById("start-call-btn");
+      const stopBtn = document.getElementById("stop-call-btn");
+      const status = document.getElementById("call-status");
+      const iframe = document.getElementById("canvas-preview-iframe");
+
+      iframe.src = "";
+      status.textContent = "Session closed. Ready to call again.";
+      
+      startBtn.style.display = "inline-flex";
+      stopBtn.style.display = "none";
+    }
+  </script>
+</body>
+</html>

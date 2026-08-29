@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KGU International - C-Suite Interactive Digital Twins</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="manifest" href="/static/manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="KGU Twin">
+  <link rel="apple-touch-icon" href="/static/images/joann.png">
+  <meta name="theme-color" content="#0b0e14">
+</head>
+<body>
+  <div class="glow-bg"></div>
+  <div class="glow-bg2"></div>
+
+  <div class="container">
+    <header class="header">
+      <h1 class="logo">KGU INTERNATIONAL</h1>
+      <p class="tagline">Active Cognitive C-Suite Swarm</p>
+    </header>
+
+    <main class="main-content">
+      <!-- Left Column: Interactive Avatar Display -->
+      <section class="avatar-panel card">
+        <div class="personality-selector">
+          <button class="personality-btn active" data-role="ceo">CEO (Wise Elder)</button>
+          <button class="personality-btn" data-role="cto">CTO (Tech Explorer)</button>
+          <button class="personality-btn" data-role="cmo">CMO (Storyteller)</button>
+          <button class="personality-btn" data-role="clo">CLO (Pragmatist)</button>
+          <button class="personality-btn" data-role="cfo">CFO (Investor)</button>
+          <button class="personality-btn" data-role="cgo">CGO (Hustler)</button>
+        </div>
+
+        <div class="cinematic-settings">
+          <div class="setting-group">
+            <label for="motion-select">Camera Motion</label>
+            <select id="motion-select" class="glow-select">
+              <option value="none" selected>None (Static)</option>
+              <option value="zoom_in">Slow Zoom In</option>
+              <option value="zoom_out">Slow Zoom Out</option>
+              <option value="pan_left">Pan Left</option>
+              <option value="pan_right">Pan Right</option>
+            </select>
+          </div>
+          <div class="setting-group">
+            <label for="filter-select">Color Grade</label>
+            <select id="filter-select" class="glow-select">
+              <option value="none" selected>None (Default)</option>
+              <option value="warm">Sunset Glow</option>
+              <option value="grayscale">Grayscale</option>
+              <option value="sepia">Sepia</option>
+              <option value="night">Night Shadows</option>
+              <option value="invert">Inversion</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="avatar-frame">
+          <div class="avatar-glow"></div>
+          <!-- Avatar Portrait (CEO starts) -->
+          <img id="avatar-image" src="images/ceo.png" alt="Joann Coffey CEO">
+          
+          <!-- Live Avatar Video Player -->
+          <video id="avatar-video" playsinline style="display: none;"></video>
+          
+          <!-- Waveform Overlay (active during playback) -->
+          <div class="waveform-container" id="waveform">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+          </div>
+
+          <!-- Subtle animated mouth overlay for speaking simulation -->
+          <div class="mouth-overlay" id="mouth"></div>
+
+          <div class="avatar-status" id="avatar-status">Active Online</div>
+        </div>
+
+        <div class="twin-details">
+          <h2 id="twin-name">Joann Coffey (CEO Twin)</h2>
+          <p id="twin-bio">Representing Joann's Present Day Wise Elder self. Directing KGU International towards a $1 trillion valuation using a lifetime of executive strategy, capital tranche management, and joint venture architecture.</p>
+        </div>
+      </section>
+
+      <!-- Right Column: Conversational Console -->
+      <section class="chat-panel card">
+        <div class="panel-header">
+          <h3>Cognitive Console</h3>
+          <span class="indicator live"></span>
+        </div>
+
+        <div class="chat-history" id="chat-history">
+          <div class="message assistant">
+            <div class="sender">Joann Coffey (CEO Twin)</div>
+            <div class="text">Greetings. I am Joann's Digital Twin. Let us align on our long-term capital strategy or review our secure network mesh deployments. What is your directive?</div>
+          </div>
+        </div>
+
+        <div class="input-area">
+          <div class="input-wrapper">
+            <input type="text" id="chat-input" placeholder="Enter your directive to the C-Suite..." autocomplete="off">
+            <button id="send-btn" class="action-btn">
+              <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+          </div>
+          <button id="mic-btn" class="mic-btn">
+            <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+          </button>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <audio id="audio-player" style="display: none;"></audio>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/static/sw.js')
+          .then(reg => console.log('Service Worker registered successfully!', reg))
+          .catch(err => console.error('Service Worker registration failed:', err));
+      });
+    }
+  </script>
+</body>
+</html>
